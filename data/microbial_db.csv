@@ -1,0 +1,8 @@
+plastic_type,microbe,efficiency,optimal_pH,optimal_temp,degradation_time
+PE,Pseudomonas aeruginosa,0.65,7.0,30,90
+PET,Ideonella sakaiensis,0.78,6.5,37,60
+PP,Bacillus subtilis,0.62,7.3,33,95
+PP,Rhodococcus ruber,0.60,7.2,32,100
+PE,Truncospora tephropora,0.45,6.5,30,150
+PE,Flavodon ambrosius,0.50,6.5,30,150
+PE,Pseudomonas fluorescens,0.30,7.0,30,120
