@@ -1,17 +1,72 @@
-.results-table {
+.report-container {
   width: 100%;
-  border-collapse: collapse;
+  max-width: 48rem; /* max-w-2xl */
+  background-color: white;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.report-header {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1F2937; /* text-dark */
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #1E40AF; /* primary-blue */
+  padding-bottom: 0.5rem;
+}
+
+.report-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.plastic-report {
+  border: 1px solid #E5E7EB; /* gray-200 */
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.plastic-header {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #1F2937; /* text-dark */
+  margin-bottom: 1rem;
+}
+
+.report-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #E5E7EB; /* gray-200 */
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.report-label {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #1F2937; /* text-dark */
+}
+
+.report-value.plastic-type,
+.report-value.microbe {
+  font-size: 1.125rem;
+  color: #1E40AF; /* primary-blue */
+}
+
+.report-value.progress {
+  font-size: 1.125rem;
+  color: #10B981; /* accent-green */
+}
+
+.report-message {
   margin-top: 1rem;
 }
 
-.results-table th,
-.results-table td {
-  border: 1px solid #ccc;
-  padding: 0.75rem;
-  text-align: left;
-}
-
-.results-table th {
-  background-color: #f0f0f0;
-  font-weight: bold;
+.report-message p {
+  color: #1F2937; /* text-dark */
+  font-style: italic;
 }

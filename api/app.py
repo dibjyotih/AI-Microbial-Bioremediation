@@ -1,9 +1,14 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from flask import Flask, request, jsonify
+from flask_cors import CORS # type: ignore
 from ai_model.plastic_identification import identify_plastic
 from ai_model.microbial_recommendation import recommend_microbe
 from ai_model.monitoring import monitor_degradation
 
 app = Flask(__name__)
+CORS(app)  # Allow frontend to connect
 
 @app.route('/identify_plastic', methods=['POST'])
 def identify_plastic_endpoint():
@@ -33,8 +38,8 @@ def recommend_microbe_endpoint():
         if not data or not all(k in data for k in ['plastic_type', 'pH', 'temp']):
             return jsonify({'error': 'Missing required fields'}), 400
         
-        microbe = recommend_microbe(data['plastic_type'], data['pH'], data['temp'])
-        return jsonify({'recommended_microbe': microbe})
+        result = recommend_microbe(data['plastic_type'], data['pH'], data['temp'])
+        return jsonify(result)
     
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -43,14 +48,14 @@ def recommend_microbe_endpoint():
 def monitor_degradation_endpoint():
     """
     API endpoint to monitor degradation progress.
-    Expects JSON: {'plastic_type': str, 'microbe': str, 'elapsed_time': float}
+    Expects JSON: {'plastic_type': str, 'microbe': str, 'elapsed_time': float, 'pH': float, 'temp': float}
     """
     try:
         data = request.get_json()
-        if not data or not all(k in data for k in ['plastic_type', 'microbe', 'elapsed_time']):
+        if not data or not all(k in data for k in ['plastic_type', 'microbe', 'elapsed_time', 'pH', 'temp']):
             return jsonify({'error': 'Missing required fields'}), 400
         
-        result = monitor_degradation(data['plastic_type'], data['microbe'], data['elapsed_time'])
+        result = monitor_degradation(data['plastic_type'], data['microbe'], data['elapsed_time'], data['pH'], data['temp'])
         return jsonify(result)
     
     except Exception as e:
