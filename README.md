@@ -1,58 +1,65 @@
-<<<<<<< HEAD
-# AI-Microbial-Bioremediation
-=======
-# React + TypeScript + Vite
+# AI-Driven Microbial Bioremediation Model for Plastic Waste Treatment in Urban Water Bodies
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Project Overview
+This project develops an AI-driven model to identify plastic types in urban water bodies using spectral data and recommend microbes for bioremediation. It processes spectral datasets (single-sample or multi-sample) to classify plastics as PET, PE, or PP, recommends optimal microbes for degradation, and estimates degradation progress over 30 days. The app features a Flask backend for AI processing and a React frontend for user interaction.
 
-Currently, two official plugins are available:
+## Key Features
+- **Plastic Identification**: Classifies plastics (PET, PE, PP) from spectral data using a pre-trained TensorFlow model with heuristic adjustments.
+- **Microbial Recommendation**: Suggests microbes (e.g., *Aspergillus flavus* for PET) based on environmental conditions (pH 7.2, temperature 32°C).
+- **Degradation Monitoring**: Estimates degradation progress (e.g., 24.0% for PET in 30 days).
+- **Flexible Input**: Supports datasets with varying numbers of spectral bands (e.g., band1 to bandN).
+- **User-Friendly Interface**: React frontend with clear instructions for uploading datasets.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Requirements
+### For Developers/Students Studying the Project
+- Basic understanding of Python (Flask, TensorFlow, pandas).
+- Familiarity with JavaScript/TypeScript and React.
+- Knowledge of Git for version control.
+- Interest in environmental science, AI, and bioremediation.
 
-## Expanding the ESLint configuration
+### Software Requirements
+- Python 3.8+: For the backend.
+- Node.js 16+ and npm: For the frontend.
+- Git: For cloning the repository.
+- Text Editor: VS Code recommended.
+- Operating System: Windows, macOS, or Linux.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Setup and Installation
+Follow these steps to run the project on your local machine.
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/dibjyotih/AI-Microbial-Bioremediation.git
+cd AI-Microbial-Bioremediation
 ```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+### Step 2: Set Up the Backend
+```bash
+cd api
 ```
->>>>>>> aed0cf95c370ab32a3b06e7e3c32db7e0b525cf5
+### Step 3 Install Python Dependencies
+```bash
+pip install -r requirements.txt
+```
+### Step 4 Run the Flask Backend
+```bash
+python app.py
+```
+### Step 5: Set Up the Frontend
+#### Install Node.js Dependencies:
+```bash
+npm install
+```
+### Step 6: Run the React Frontend
+```bash
+npm run dev
+```
+## Future Improvements
+- Train the TensorFlow model on real spectral data for better accuracy.
+- Allow users to input custom environmental conditions (pH, temperature).
+- Add support for more plastic types and microbes.
+- Improve frontend UI/UX with better visualizations.
+
+## Contributors
+- Dibjyoti Hota ([GitHub: dibjyotih](https://github.com/dibjyotih))
+- Harsh Pandey ([GitHub: rn-harsh04](https://github.com/rn-harsh04))
+
