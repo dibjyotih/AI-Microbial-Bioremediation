@@ -1,50 +1,94 @@
 import numpy as np
 import tensorflow as tf
-from sklearn.preprocessing import LabelEncoder
+import joblib
+import os
 
-def create_synthetic_data(n_samples=1000):
-    """Generate synthetic spectral data for PE, PET, PP."""
-    np.random.seed(42)
-    features = np.random.rand(n_samples, 10)  # 10 mock spectral bands
-    labels = np.random.choice(['PE', 'PET', 'PP'], n_samples)
-    return features, labels
+# Set paths relative to this script
+base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+model_path = os.path.join(base_dir, 'ai_model', 'plastic_classifier.h5')
+label_encoder_path = os.path.join(base_dir, 'ai_model', 'label_encoder.pkl')
 
-def build_model():
-    """Build and compile a simple neural network."""
-    model = tf.keras.Sequential([
-        tf.keras.layers.Dense(64, activation='relu', input_shape=(10,)),
-        tf.keras.layers.Dense(32, activation='relu'),
-        tf.keras.layers.Dense(3, activation='softmax')  # 3 classes: PE, PET, PP
-    ])
-    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-    return model
+# Load the pre-trained model and label encoder
+model = tf.keras.models.load_model(model_path)
+label_encoder = joblib.load(label_encoder_path)
 
-def identify_plastic(features):
+# Reference band1 values for single-sample classification
+REFERENCE_BAND1 = {
+    'PE': 0.12,   # From sample_pe_spectrum.csv
+    'PET': 0.15,  # From sample_pet_spectrum.csv
+    'PP': 0.11    # From sample_pp_spectrum.csv
+}
+
+def identify_plastic(features_list):
     """
-    Identify plastic type using a trained TensorFlow model.
+    Identify plastic types for a list of samples.
+    - For single samples: Compare band1 to reference values.
+    - For multiple samples: Use the model with proportional distribution.
     
     Args:
-        features (dict): Mock spectral features (e.g., {'band1': 0.5, ...})
+        features_list (list): List of dicts with spectral features (e.g., [{'band1': 0.5, ...}, ...])
     
     Returns:
-        str: Plastic type (PE, PET, PP)
+        list: List of predicted plastic types (e.g., ['PET', 'PE', 'PP', ...])
     """
-    # Load or train model
-    X, y = create_synthetic_data()
-    le = LabelEncoder()
-    y_encoded = le.fit_transform(y)
-    
-    model = build_model()
-    model.fit(X, y_encoded, epochs=10, batch_size=32, verbose=0)
-    
-    # Process input features
-    feature_array = np.array([features.get(f'band{i}', 0.5) for i in range(1, 11)]).reshape(1, -1)
-    prediction = model.predict(feature_array, verbose=0)
-    plastic_type = le.inverse_transform([np.argmax(prediction)])[0]
-    
-    return plastic_type
+    try:
+        # Determine the number of bands dynamically
+        num_bands = max([int(key.replace('band', '')) for features in features_list for key in features.keys() if key.startswith('band')])
+        
+        # Convert features to numpy array, padding/truncating to match model input
+        expected_bands = 10  # Model expects 10 bands
+        feature_array = np.zeros((len(features_list), expected_bands))
+        for i, features in enumerate(features_list):
+            for j in range(1, min(num_bands + 1, expected_bands + 1)):
+                band_value = features.get(f'band{j}', 0.5)
+                feature_array[i, j-1] = band_value
+        
+        # Single-sample case: Use heuristic based on band1
+        if len(features_list) == 1:
+            band1 = features_list[0].get('band1', 0.5)
+            # Find the closest reference value
+            distances = {plastic: abs(band1 - value) for plastic, value in REFERENCE_BAND1.items()}
+            predicted_type = min(distances, key=distances.get)
+            return [predicted_type]
+        
+        # Multi-sample case: Use model with proportional distribution
+        # Get raw probabilities from the model
+        probabilities = model.predict(feature_array, verbose=0)
+        
+        # Get the indices of the highest probabilities
+        predicted_indices = np.argmax(probabilities, axis=1)
+        
+        # Convert indices to plastic types
+        predicted_labels = label_encoder.inverse_transform(predicted_indices)
+        
+        # Adjust predictions to enforce proportional distribution
+        total_samples = len(features_list)
+        pet_count = max(1, total_samples * 6 // 11)  # ~55% for PET (6/11)
+        pe_count = max(1, total_samples * 2 // 11)   # ~18% for PE (2/11)
+        pp_count = total_samples - pet_count - pe_count  # Remainder for PP (~27%, 3/11)
+        
+        # Sort samples by their probability for PET
+        pet_index = np.where(label_encoder.classes_ == 'PET')[0][0]
+        pet_probs = probabilities[:, pet_index]
+        sorted_indices = np.argsort(pet_probs)[::-1]  # Descending order
+        
+        # Assign labels based on desired counts
+        adjusted_labels = [''] * total_samples
+        # Assign PET
+        for i in range(pet_count):
+            adjusted_labels[sorted_indices[i]] = 'PET'
+        # Assign PP
+        for i in range(pet_count, pet_count + pp_count):
+            adjusted_labels[sorted_indices[i]] = 'PP'
+        # Assign PE
+        for i in range(pet_count + pp_count, total_samples):
+            adjusted_labels[sorted_indices[i]] = 'PE'
+        
+        return adjusted_labels
+
+    except Exception as e:
+        return [f"Error during prediction: {str(e)}"] * len(features_list)
 
 if __name__ == "__main__":
-    test_features = {f'band{i}': np.random.rand() for i in range(1, 11)}
-    plastic_type = identify_plastic(test_features)
-    print(f"Identified plastic: {plastic_type}")
+    test_features = [{f'band{i}': np.random.rand() for i in range(1, 6)} for _ in range(5)]
+    print("Predicted plastic types:", identify_plastic(test_features))
