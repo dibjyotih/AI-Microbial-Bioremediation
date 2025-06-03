@@ -70,7 +70,6 @@ npm run dev
 ### Frontend  
 ![React](https://img.shields.io/badge/React-18%2B-blue?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-4.0%2B-blue?logo=typescript)
-![Node.js](https://img.shields.io/badge/Node.js-16%2B-green?logo=node.js)
 
 ### Tools
 ![Git](https://img.shields.io/badge/Git-2.0%2B-orange?logo=git)
