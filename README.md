@@ -59,6 +59,22 @@ npm run dev
 - Add support for more plastic types and microbes.
 - Improve frontend UI/UX with better visualizations.
 
+## 🛠 Built With
+
+### Backend
+![Python](https://img.shields.io/badge/Python-3.8%2B-blue?logo=python)
+![Flask](https://img.shields.io/badge/Flask-2.0%2B-lightgrey?logo=flask)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-2.0%2B-orange?logo=tensorflow)
+![Pandas](https://img.shields.io/badge/Pandas-1.0%2B-blue?logo=pandas&logoColor=white)
+
+### Frontend  
+![React](https://img.shields.io/badge/React-18%2B-blue?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-4.0%2B-blue?logo=typescript)
+![Node.js](https://img.shields.io/badge/Node.js-16%2B-green?logo=node.js)
+
+### Tools
+![Git](https://img.shields.io/badge/Git-2.0%2B-orange?logo=git)
+![VS Code](https://img.shields.io/badge/VS_Code-1.0%2B-blue?logo=visual-studio-code)
 ## Contributors
 - Dibjyoti Hota ([GitHub: dibjyotih](https://github.com/dibjyotih))
 - Harsh Pandey ([GitHub: rn-harsh04](https://github.com/rn-harsh04))
